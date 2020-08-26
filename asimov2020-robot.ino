@@ -37,7 +37,6 @@ void listen() {
   static byte index = 0;
   char startMarker = '#';
   char endMarker = '*';
-  char splitMarker = ',';
   char currentChar;
 
   while (Serial.available() > 0 && newData == false) {
@@ -59,13 +58,14 @@ void listen() {
 }
 
 struct ControlState parsePayloadToControlState(String input) {
+  char splitDelimiter = ',';
   struct ControlState controlState = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
 
   int values[12], r=0, t=0;
 
   for (int i=0; i < input.length(); i++)
   { 
-    if(input.charAt(i) == ',') 
+    if(input.charAt(i) == splitDelimiter) 
     { 
       values[t] = input.substring(r, i).toInt(); 
       r=(i+1); 
