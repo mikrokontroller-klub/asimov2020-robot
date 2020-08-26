@@ -99,21 +99,28 @@ void listen()
 	{
 		currentChar = Serial.read();
 
-		if (currentChar != endMarker)
+		if (receivingInProgress == true)
 		{
-			receivedChars[index] = currentChar;
-			index++;
-			if (index >= numChars)
+			if (currentChar != endMarker)
 			{
-				index = numChars - 1;
+				receivedChars[index] = currentChar;
+				index++;
+				if (index >= numChars)
+				{
+					index = numChars - 1;
+				}
+			}
+			else
+			{								 // When got them all
+				receivedChars[index] = '\0'; // terminate the string
+				receivingInProgress = false;
+				index = 0;
+				newData = true;
 			}
 		}
-		else
-		{								 // When got them all
-			receivedChars[index] = '\0'; // terminate the string
-			receivingInProgress = false;
-			index = 0;
-			newData = true;
+		else if (currentChar == startMarker)
+		{
+			receivingInProgress = true;
 		}
 	}
 }
