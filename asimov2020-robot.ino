@@ -94,13 +94,14 @@ void dispatchControlState(struct ControlState controlState) {
 }
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("#Asimov is ready*");
+  Serial.begin(38400);
+  Serial.println("#Ready*");
 }
 
 void loop() {
   listen();
   if (newData) {
+    Serial.println("#Received*");
     struct ControlState controlState = parsePayloadToControlState(receivedChars);
     dispatchControlState(controlState);
     newData = false;
