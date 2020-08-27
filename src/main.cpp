@@ -124,7 +124,7 @@ void listen()
 		}
 	}
 }
-void handleStepperStateChange(AccelStepper stepper, struct StepperState stepperState)
+void dispatchStepperState(AccelStepper stepper, struct StepperState stepperState)
 {
 	int translatedSpeed = map(stepperState.speed, 0, 5, 0, MAX_STEPPER_SPEED);
 	switch (stepperState.direction)
@@ -137,18 +137,18 @@ void handleStepperStateChange(AccelStepper stepper, struct StepperState stepperS
 		break;
 	}
 }
-void handleServoStateChange(byte servoIndex, struct ServoState servoState)
+void dispatchServoState(byte servoIndex, struct ServoState servoState)
 {
 	pwmServoDriver.setPWM(servoIndex, 0, angleToPWM(servoState.angle));
 }
-void handleStateChange(struct State state)
+void handleStateChange(struct State newState)
 {
-	handleStepperStateChange(leftStepper, state.leftStepper);
-	handleStepperStateChange(rightStepper, state.rightStepper);
-	handleServoStateChange(0, state.servo1);
-	handleServoStateChange(1, state.servo2);
-	handleServoStateChange(2, state.servo3);
-	handleServoStateChange(3, state.servo4);
+	dispatchStepperState(leftStepper, newState.leftStepper);
+	dispatchStepperState(rightStepper, newState.rightStepper);
+	dispatchServoState(0, newState.servo1);
+	dispatchServoState(1, newState.servo2);
+	dispatchServoState(2, newState.servo3);
+	dispatchServoState(3, newState.servo4);
 }
 
 void setup()
