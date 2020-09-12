@@ -14,12 +14,12 @@
 #define DEFAULT_PULSE_WIDTH 1500
 #define FREQUENCY 50
 
-#define MAX_STEPPER_SPEED 500
+#define MAX_STEPPER_SPEED 8000
 
-#define LEFT_MOTOR_PIN1 0
-#define LEFT_MOTOR_PIN2 0
-#define RIGHT_MOTOR_PIN1 0
-#define RIGHT_MOTOR_PIN2 0
+#define LEFT_MOTOR_DIR_PIN 3
+#define LEFT_MOTOR_STEP_PIN 2
+#define RIGHT_MOTOR_DIR_PIN 5
+#define RIGHT_MOTOR_STEP_PIN 4
 
 struct StepperState
 {
@@ -44,8 +44,8 @@ struct State
 boolean newData = false;
 const byte numChars = 32;
 char receivedChars[numChars];
-AccelStepper leftStepper(AccelStepper::DRIVER, LEFT_MOTOR_PIN1, LEFT_MOTOR_PIN2);
-AccelStepper rightStepper(AccelStepper::DRIVER, RIGHT_MOTOR_PIN1, RIGHT_MOTOR_PIN2);
+AccelStepper leftStepper(AccelStepper::DRIVER, LEFT_MOTOR_DIR_PIN, LEFT_MOTOR_STEP_PIN);
+AccelStepper rightStepper(AccelStepper::DRIVER, RIGHT_MOTOR_DIR_PIN, RIGHT_MOTOR_STEP_PIN);
 Adafruit_PWMServoDriver pwmServoDriver = Adafruit_PWMServoDriver();
 
 struct State parseToState(String payload)
@@ -124,7 +124,7 @@ void listen()
 		}
 	}
 }
-void dispatchStepperState(AccelStepper stepper, struct StepperState stepperState)
+void dispatchStepperState(AccelStepper &stepper, struct StepperState stepperState)
 {
 	int translatedSpeed = map(stepperState.speed, 0, 5, 0, MAX_STEPPER_SPEED);
 	switch (stepperState.direction)
@@ -156,6 +156,8 @@ void setup()
 	Serial.begin(38400);
 	pwmServoDriver.begin();
 	pwmServoDriver.setPWMFreq(FREQUENCY);
+	leftStepper.setMaxSpeed(MAX_STEPPER_SPEED);
+	rightStepper.setMaxSpeed(MAX_STEPPER_SPEED);
 	Serial.println("#Ready*");
 }
 
