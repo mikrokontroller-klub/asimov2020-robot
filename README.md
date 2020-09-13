@@ -3,3 +3,5 @@ MaM robot programja
 
 Jelenlegi állapotban erre képes:
 - Feldolgozni a beérkezett kérést
+- Vezérelni a szervókat
+- Vezérelni a léptetőmotorokat
