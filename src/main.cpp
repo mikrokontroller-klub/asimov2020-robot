@@ -153,7 +153,7 @@ void handleControlStateChange(struct ControlState newControlState)
 
 void setup()
 {
-	Serial.begin(9600);
+	Serial.begin(38400);
 	pwmServoDriver.begin();
 	pwmServoDriver.setPWMFreq(FREQUENCY);
 	leftStepper.setMaxSpeed(MAX_STEPPER_SPEED);
