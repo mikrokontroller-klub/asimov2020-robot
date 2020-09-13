@@ -24,7 +24,7 @@
 struct StepperControlState
 {
 	byte direction;
-	byte speed;
+	byte speedLevel;
 };
 struct ServoControlState
 {
@@ -65,14 +65,14 @@ struct ControlState deserialise(String payload)
 		}
 	}
 
-	controlState.rightStepper.speed = values[1];
+	controlState.rightStepper.speedLevel = values[1];
 	controlState.rightStepper.direction = values[0];
 	controlState.leftStepper.direction = values[2];
-	controlState.leftStepper.speed = values[3];
+	controlState.leftStepper.speedLevel = values[3];
+	controlState.servo1.angle = values[4];
 	controlState.servo1.speed = values[5];
 	controlState.servo2.angle = values[6];
 	controlState.servo2.speed = values[7];
-	controlState.servo1.angle = values[4];
 	controlState.servo3.angle = values[8];
 	controlState.servo3.speed = values[9];
 	controlState.servo4.angle = values[10];
@@ -126,14 +126,14 @@ void listen()
 }
 void dispatchStepperControlState(AccelStepper &stepper, struct StepperControlState stepperControlState)
 {
-	int translatedSpeed = map(stepperControlState.speed, 0, 5, 0, MAX_STEPPER_SPEED);
+	byte speed = map(stepperControlState.speedLevel, 0, 5, 0, MAX_STEPPER_SPEED);
 	switch (stepperControlState.direction)
 	{
 	case 0:
-		stepper.setSpeed(-translatedSpeed);
+		stepper.setSpeed(-speed);
 		break;
 	case 1:
-		stepper.setSpeed(translatedSpeed);
+		stepper.setSpeed(speed);
 		break;
 	}
 }
@@ -158,7 +158,7 @@ void setup()
 	pwmServoDriver.setPWMFreq(FREQUENCY);
 	leftStepper.setMaxSpeed(MAX_STEPPER_SPEED);
 	rightStepper.setMaxSpeed(MAX_STEPPER_SPEED);
-	Serial.println("#Ready*");
+	Serial.println("Ready");
 }
 
 void loop()
@@ -166,7 +166,7 @@ void loop()
 	listen();
 	if (newData)
 	{
-		Serial.println("#Received*");
+		Serial.println("Received");
 		struct ControlState controlState = deserialise(receivedChars);
 		handleControlStateChange(controlState);
 		newData = false;
