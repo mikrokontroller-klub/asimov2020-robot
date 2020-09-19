@@ -29,7 +29,6 @@ struct StepperControlState
 struct ServoControlState
 {
 	byte angle;
-	byte speed;
 };
 struct ControlState
 {
@@ -65,18 +64,14 @@ struct ControlState deserialise(String payload)
 		}
 	}
 
-	controlState.rightStepper.speedLevel = values[1];
-	controlState.rightStepper.direction = values[0];
-	controlState.leftStepper.direction = values[2];
-	controlState.leftStepper.speedLevel = values[3];
-	controlState.servo1.angle = values[4];
-	controlState.servo1.speed = values[5];
-	controlState.servo2.angle = values[6];
-	controlState.servo2.speed = values[7];
-	controlState.servo3.angle = values[8];
-	controlState.servo3.speed = values[9];
-	controlState.servo4.angle = values[10];
-	controlState.servo4.speed = values[11];
+	controlState.leftStepper.speedLevel = values[0];
+	controlState.rightStepper.speedLevel = values[0];
+	controlState.leftStepper.direction = values[1];
+	controlState.rightStepper.direction = values[2];
+	controlState.servo1.angle = values[3];
+	controlState.servo2.angle = values[4];
+	controlState.servo3.angle = values[5];
+	controlState.servo4.angle = values[6];
 
 	return controlState;
 }
